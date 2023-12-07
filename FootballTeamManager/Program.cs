@@ -1,4 +1,14 @@
+using FootballTeamManager.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// BD Config
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("ConexionSql"));
+});
 
 // Add services to the container.
 
