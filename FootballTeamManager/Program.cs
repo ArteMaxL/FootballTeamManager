@@ -1,4 +1,7 @@
 using FootballTeamManager.Data;
+using FootballTeamManager.Mapper;
+using FootballTeamManager.Repositorio;
+using FootballTeamManager.Repositorio.IRepositorio;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("ConexionSql"));
 });
+
+// Repos
+
+builder.Services.AddScoped<IEquipoRepositorio, EquipoRepositorio>();
+
+// Mapper
+
+builder.Services.AddAutoMapper(typeof(EquipoMapper));
 
 // Add services to the container.
 

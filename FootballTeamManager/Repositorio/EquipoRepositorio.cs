@@ -1,7 +1,6 @@
 ﻿using FootballTeamManager.Data;
 using FootballTeamManager.Modelos;
 using FootballTeamManager.Repositorio.IRepositorio;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FootballTeamManager.Repositorio
 {
@@ -46,7 +45,7 @@ namespace FootballTeamManager.Repositorio
             return valor;
         }
 
-        public ICollection<Equipo> GetEquipo()
+        public ICollection<Equipo> GetEquipos()
         {
             return _context.Equipo.OrderBy(x => x.Nombre).ToList();
         }

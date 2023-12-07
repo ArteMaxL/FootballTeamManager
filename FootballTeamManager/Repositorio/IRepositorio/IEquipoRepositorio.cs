@@ -4,7 +4,7 @@ namespace FootballTeamManager.Repositorio.IRepositorio
 {
     public interface IEquipoRepositorio
     {
-        ICollection<Equipo> GetEquipo();
+        ICollection<Equipo> GetEquipos();
         Equipo GetEquipo(int equipoId);
         bool ExisteEquipo(string nombre);
         bool ExisteEquipo(int id);
