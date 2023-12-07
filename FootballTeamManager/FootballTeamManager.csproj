@@ -22,7 +22,6 @@
     <Folder Include="Modelos\DTOs\" />
     <Folder Include="Mapper\" />
     <Folder Include="BD\" />
-    <Folder Include="Repositorio\IRepositorio\" />
   </ItemGroup>
 
 </Project>
