@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Repos
 
 builder.Services.AddScoped<IEquipoRepositorio, EquipoRepositorio>();
+builder.Services.AddScoped<IJugadorRepositorio, JugadorRepositorio>();
 
 // Mapper
 
