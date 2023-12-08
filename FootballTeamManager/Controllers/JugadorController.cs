@@ -117,5 +117,44 @@ namespace FootballTeamManager.Controllers
 
             return NoContent();
         }
+
+        [HttpGet("GetJugadoresPorEquipo/{equipoId:int}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public IActionResult GetJugadoresPorEquipo(int equipoId)
+        {
+            var listaJugadores = _repo.GetJugadoresPorEquipo(equipoId);
+
+            if (listaJugadores == null) NotFound();
+
+            var listaJugadoresDTO = new List<JugadorDTO>();
+
+            foreach (var item in listaJugadores)
+            {
+                listaJugadoresDTO.Add(_mapper.Map<JugadorDTO>(item));
+            }
+
+            return Ok(listaJugadoresDTO);
+        }
+
+        [HttpGet("Buscar/{nombre:alpha}")]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public IActionResult Buscar(string nombre)
+        {
+            try
+            {
+                var resultado = _repo.BuscarJugador(nombre.Trim());
+                if (resultado.Any()) return Ok(resultado);
+
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
     }
 }
