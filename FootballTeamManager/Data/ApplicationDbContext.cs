@@ -9,5 +9,6 @@ namespace FootballTeamManager.Data
         {
         }
         public DbSet<Equipo> Equipo { get; set; }   
+        public DbSet<Jugador> Jugador { get; set; }   
     }
 }
