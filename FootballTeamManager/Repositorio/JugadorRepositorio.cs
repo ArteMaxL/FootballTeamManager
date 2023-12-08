@@ -31,6 +31,7 @@ namespace FootballTeamManager.Repositorio
         {
             modelo.FechaCreacion = DateTime.Now;
             modelo.EstaActivo = true;
+
             _context.Jugador.Add(modelo);
             return Guardar();
         }
@@ -73,7 +74,14 @@ namespace FootballTeamManager.Repositorio
 
         public bool Guardar()
         {
-            return _context.SaveChanges() >= 0 ? true : false;
+            try
+            {
+                return _context.SaveChanges() >= 0 ? true : false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
     }
