@@ -10,6 +10,8 @@ namespace FootballTeamManager.Mapper
         {
             CreateMap<Equipo, EquipoDTO>().ReverseMap();
             CreateMap<Equipo, CrearEquipoDTO>().ReverseMap();
+
+            CreateMap<Jugador, JugadorDTO>().ReverseMap();
         }
     }
 }
