@@ -12,14 +12,14 @@ namespace FootballTeamManager.Modelos.DTOs
         public string Nombre { get; set; }
 
         public string ImagenUrl { get; set; }
-        public int Puntos { get; set; }
-        public int Asistencias { get; set; }
-        public int Ganados { get; set; }
-        public double Efectividad { get; set; }
-        public double PorcentajeAsistencia { get; set; }
+        public int? Puntos { get; set; }
+        public int? Asistencias { get; set; }
+        public int? Ganados { get; set; }
+        public double? Efectividad { get; set; }
+        public double? PorcentajeAsistencia { get; set; }
         public Posiciones Posicion { get; set; }
         public DateOnly JuegaDesde { get; set; }
 
-        public int EquipoId { get; set; }
+        public int? EquipoId { get; set; }
     }
 }

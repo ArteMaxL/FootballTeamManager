@@ -42,13 +42,13 @@ namespace FootballTeamManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Asistencias")
+                    b.Property<int?>("Asistencias")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Efectividad")
+                    b.Property<double?>("Efectividad")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("EquipoId")
+                    b.Property<int?>("EquipoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("EstaActivo")
@@ -57,7 +57,7 @@ namespace FootballTeamManager.Migrations
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Ganados")
+                    b.Property<int?>("Ganados")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ImagenUrl")
@@ -71,13 +71,13 @@ namespace FootballTeamManager.Migrations
                         .HasMaxLength(80)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("PorcentajeAsistencia")
+                    b.Property<double?>("PorcentajeAsistencia")
                         .HasColumnType("REAL");
 
                     b.Property<int>("Posicion")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Puntos")
+                    b.Property<int?>("Puntos")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -92,8 +92,7 @@ namespace FootballTeamManager.Migrations
                     b.HasOne("FootballTeamManager.Modelos.Equipo", "Equipo")
                         .WithMany()
                         .HasForeignKey("EquipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Equipo");
                 });

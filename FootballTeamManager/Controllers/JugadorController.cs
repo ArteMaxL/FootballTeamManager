@@ -68,6 +68,8 @@ namespace FootballTeamManager.Controllers
                 return NotFound(ModelState);
             }
 
+            if (crearJugadorDTO.EquipoId == 0) crearJugadorDTO.EquipoId = null;
+
             var jugador = _mapper.Map<Jugador>(crearJugadorDTO);
 
             if (!_repo.CrearJugador(jugador))

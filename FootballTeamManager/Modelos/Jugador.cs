@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FootballTeamManager.Modelos
 {
@@ -14,20 +15,18 @@ namespace FootballTeamManager.Modelos
         [MaxLength(80)]
         public string Nombre { get; set; }
         public string ImagenUrl { get; set; }
-        public int Puntos { get; set; }
-        public int Asistencias { get; set; }
-        public int Ganados { get; set; }
-        public double Efectividad { get; set; }
-        public double PorcentajeAsistencia { get; set; }
+        public int? Puntos { get; set; }
+        public int? Asistencias { get; set; }
+        public int? Ganados { get; set; }
+        public double? Efectividad { get; set; }
+        public double? PorcentajeAsistencia { get; set; }
         public Posiciones Posicion { get; set; }
         public DateOnly JuegaDesde { get; set; }
         public DateTime FechaCreacion { get; set; }
 
         [DefaultValue(true)]
-        public bool EstaActivo { get; set; }
-
-        [ForeignKey(nameof(EquipoId))]
-        public int EquipoId { get; set; }
+        public bool EstaActivo { get; set; }        
+        public int? EquipoId { get; set; }
         public Equipo Equipo { get; set; }
     }
 

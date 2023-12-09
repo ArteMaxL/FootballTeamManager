@@ -6,11 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FootballTeamManager.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionTablaJugador : Migration
+    public partial class Inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Equipo",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombre = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Equipo", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Jugador",
                 columns: table => new
@@ -19,16 +33,16 @@ namespace FootballTeamManager.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Nombre = table.Column<string>(type: "TEXT", maxLength: 80, nullable: false),
                     ImagenUrl = table.Column<string>(type: "TEXT", nullable: true),
-                    Puntos = table.Column<int>(type: "INTEGER", nullable: false),
-                    Asistencias = table.Column<int>(type: "INTEGER", nullable: false),
-                    Ganados = table.Column<int>(type: "INTEGER", nullable: false),
-                    Efectividad = table.Column<double>(type: "REAL", nullable: false),
-                    PorcentajeAsistencia = table.Column<double>(type: "REAL", nullable: false),
+                    Puntos = table.Column<int>(type: "INTEGER", nullable: true),
+                    Asistencias = table.Column<int>(type: "INTEGER", nullable: true),
+                    Ganados = table.Column<int>(type: "INTEGER", nullable: true),
+                    Efectividad = table.Column<double>(type: "REAL", nullable: true),
+                    PorcentajeAsistencia = table.Column<double>(type: "REAL", nullable: true),
                     Posicion = table.Column<int>(type: "INTEGER", nullable: false),
                     JuegaDesde = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     FechaCreacion = table.Column<DateTime>(type: "TEXT", nullable: false),
                     EstaActivo = table.Column<bool>(type: "INTEGER", nullable: false),
-                    EquipoId = table.Column<int>(type: "INTEGER", nullable: false)
+                    EquipoId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -38,7 +52,7 @@ namespace FootballTeamManager.Migrations
                         column: x => x.EquipoId,
                         principalTable: "Equipo",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -52,6 +66,9 @@ namespace FootballTeamManager.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Jugador");
+
+            migrationBuilder.DropTable(
+                name: "Equipo");
         }
     }
 }
