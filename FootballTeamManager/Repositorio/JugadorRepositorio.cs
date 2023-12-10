@@ -29,9 +29,6 @@ namespace FootballTeamManager.Repositorio
 
         public bool CrearJugador(Jugador modelo)
         {
-            modelo.FechaCreacion = DateTime.Now;
-            modelo.EstaActivo = true;
-
             _context.Jugador.Add(modelo);
             return Guardar();
         }
@@ -67,7 +64,7 @@ namespace FootballTeamManager.Repositorio
         {
             IQueryable<Jugador> query = _context.Jugador;
 
-            if (!string.IsNullOrEmpty(nombre)) query = query.Where(j => j.Nombre.Contains(nombre));
+            if (!string.IsNullOrEmpty(nombre)) query = query.Where(j => j.Nombre.ToLower().Contains(nombre));
 
             return query.ToList();
         }

@@ -2,6 +2,8 @@ using FootballTeamManager.Data;
 using FootballTeamManager.Mapper;
 using FootballTeamManager.Repositorio;
 using FootballTeamManager.Repositorio.IRepositorio;
+using FootballTeamManager.Services;
+using FootballTeamManager.Services.IServices;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<IEquipoRepositorio, EquipoRepositorio>();
 builder.Services.AddScoped<IJugadorRepositorio, JugadorRepositorio>();
+builder.Services.AddScoped<IJugadorService, JugadorService>();
 
 // Mapper
 
