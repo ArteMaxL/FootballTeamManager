@@ -2,21 +2,24 @@
 using FootballTeamManager.Modelos;
 using FootballTeamManager.Modelos.DTOs;
 using FootballTeamManager.Repositorio.IRepositorio;
+using FootballTeamManager.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FootballTeamManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/players")]
     [ApiController]
     public class JugadorController : ControllerBase
     {
         private readonly IJugadorRepositorio _repo;
         private readonly IMapper _mapper;
+        private readonly IJugadorService _jugadorService;
 
-        public JugadorController(IJugadorRepositorio repo, IMapper mapper)
+        public JugadorController(IJugadorRepositorio repo, IMapper mapper, IJugadorService jugadorService)
         {
             _repo = repo;
             _mapper = mapper;
+            _jugadorService = jugadorService;
         }
 
         [HttpGet]
@@ -35,14 +38,14 @@ namespace FootballTeamManager.Controllers
             return Ok(listaJugadoresDTO);
         }
 
-        [HttpGet("{jugadorId:int}", Name = "GetJugador")]
+        [HttpGet("{playerId:int}", Name = "GetPlayer")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetJugador(int jugadorId)
+        public IActionResult GetJugador(int playerId)
         {
-            var jugador = _repo.GetJugador(jugadorId);
+            var jugador = _repo.GetJugador(playerId);
 
             if (jugador == null) return NotFound();
 
@@ -59,34 +62,30 @@ namespace FootballTeamManager.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public IActionResult CrearJugador([FromBody] CrearJugadorDTO crearJugadorDTO)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-            if (crearJugadorDTO == null) return BadRequest(ModelState);
-
-            if (_repo.ExisteJugador(crearJugadorDTO.Nombre))
+            try
             {
-                ModelState.AddModelError("", "El jugador ya existe");
-                return NotFound(ModelState);
+                if (!ModelState.IsValid || crearJugadorDTO is null) return BadRequest(ModelState);
+                var jugador = _jugadorService.CrearJugador(crearJugadorDTO);
+
+                return CreatedAtRoute("GetPlayer", new { playerId = jugador.Id }, jugador);
             }
-
-            if (crearJugadorDTO.EquipoId == 0) crearJugadorDTO.EquipoId = null;
-
-            var jugador = _mapper.Map<Jugador>(crearJugadorDTO);
-
-            if (!_repo.CrearJugador(jugador))
+            catch (ArgumentException ex)
             {
-                ModelState.AddModelError("", $"Algo salió mal al guardar el jugador: {jugador.Nombre}");
+                return BadRequest( new { Error = ex.Message });
+            }
+            catch
+            {
+                ModelState.AddModelError("", $"Algo salió mal al guardar el jugador: {crearJugadorDTO.Nombre}");
                 return StatusCode(500, ModelState);
             }
-
-            return CreatedAtRoute("GetJugador", new { jugadorId = jugador.Id }, jugador);
         }
 
-        [HttpPatch("{jugadorId:int}", Name = "PatchJugador")]
+        [HttpPatch("{playerId:int}", Name = "PatchPlayer")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PatchJugador(int jugadorId, [FromBody] JugadorDTO jugadorDTO)
+        public IActionResult PatchJugador(int playerId, [FromBody] JugadorDTO jugadorDTO)
         {
-            if (jugadorDTO == null || jugadorId != jugadorDTO.Id) return BadRequest(ModelState);
+            if (jugadorDTO == null || playerId != jugadorDTO.Id) return BadRequest(ModelState);
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var jugador = _mapper.Map<Jugador>(jugadorDTO);
@@ -100,16 +99,16 @@ namespace FootballTeamManager.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{jugadorId:int}", Name = "EliminarJugador")]
+        [HttpDelete("{playerId:int}", Name = "EliminarJugador")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult EliminarJugador(int jugadorId)
+        public IActionResult EliminarJugador(int playerId)
         {
-            if (!_repo.ExisteJugador(jugadorId)) return NotFound();
+            if (!_repo.ExisteJugador(playerId)) return NotFound();
 
-            var jugador = _repo.GetJugador(jugadorId);
+            var jugador = _repo.GetJugador(playerId);
 
             if (!_repo.BorrarJugador(jugador))
             {
@@ -120,12 +119,12 @@ namespace FootballTeamManager.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetJugadoresPorEquipo/{equipoId:int}")]
+        [HttpGet("GetPlayersByTeam/{teamId:int}")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetJugadoresPorEquipo(int equipoId)
+        public IActionResult GetJugadoresPorEquipo(int teamId)
         {
-            var listaJugadores = _repo.GetJugadoresPorEquipo(equipoId);
+            var listaJugadores = _repo.GetJugadoresPorEquipo(teamId);
 
             if (listaJugadores == null) NotFound();
 
@@ -139,16 +138,16 @@ namespace FootballTeamManager.Controllers
             return Ok(listaJugadoresDTO);
         }
 
-        [HttpGet("Buscar/{nombre:alpha}")]
+        [HttpGet("SearchByName/{name:alpha}")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public IActionResult Buscar(string nombre)
+        public IActionResult Buscar(string name)
         {
             try
             {
-                var resultado = _repo.BuscarJugador(nombre.Trim());
+                var resultado = _repo.BuscarJugador(name.ToLower().Trim());
                 if (resultado.Any()) return Ok(resultado);
 
                 return NotFound();

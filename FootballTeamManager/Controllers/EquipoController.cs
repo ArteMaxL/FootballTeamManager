@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FootballTeamManager.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/teams")]
     [ApiController]
     public class EquipoController : ControllerBase
     {
@@ -36,14 +36,14 @@ namespace FootballTeamManager.Controllers
             return Ok(listaEquiposDTO);
         }
 
-        [HttpGet("{equipoId:int}", Name = "GetEquipo")]
+        [HttpGet("{teamId:int}", Name = "GetTeam")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetEquipo( int equipoId)
+        public IActionResult GetEquipo( int teamId)
         {
-            var equipo = _repo.GetEquipo(equipoId);
+            var equipo = _repo.GetEquipo(teamId);
 
             if (equipo == null) return NotFound();
 
@@ -77,15 +77,15 @@ namespace FootballTeamManager.Controllers
                 return StatusCode(500, ModelState);
             }
 
-            return CreatedAtRoute("GetEquipo", new { equipoId = equipo.Id }, equipo);
+            return CreatedAtRoute("GetTeam", new { teamId = equipo.Id }, equipo);
         }
 
-        [HttpPatch("{equipoId:int}", Name = "PatchEquipo")]
+        [HttpPatch("{teamId:int}", Name = "PatchTeam")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult PatchEquipo(int equipoId, [FromBody] EquipoDTO equipoDTO)
+        public IActionResult PatchEquipo(int teamId, [FromBody] EquipoDTO equipoDTO)
         {
-            if (equipoDTO == null || equipoId != equipoDTO.Id) return BadRequest(ModelState);
+            if (equipoDTO == null || teamId != equipoDTO.Id) return BadRequest(ModelState);
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var equipo = _mapper.Map<Equipo>(equipoDTO);
@@ -99,16 +99,16 @@ namespace FootballTeamManager.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{equipoId:int}", Name = "EliminarEquipo")]
+        [HttpDelete("{teamId:int}", Name = "DeleteTeam")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult EliminarEquipo(int equipoId)
+        public IActionResult EliminarEquipo(int teamId)
         {
-            if (!_repo.ExisteEquipo(equipoId)) return NotFound();
+            if (!_repo.ExisteEquipo(teamId)) return NotFound();
 
-            var equipo = _repo.GetEquipo(equipoId);
+            var equipo = _repo.GetEquipo(teamId);
 
             if (!_repo.BorrarEquipo(equipo))
             {
