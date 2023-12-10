@@ -3,6 +3,9 @@ using FootballTeamManager.Modelos;
 using FootballTeamManager.Modelos.DTOs;
 using FootballTeamManager.Repositorio.IRepositorio;
 using FootballTeamManager.Services.IServices;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.ComponentModel.DataAnnotations;
 
 namespace FootballTeamManager.Services
 {
@@ -19,6 +22,8 @@ namespace FootballTeamManager.Services
 
         public JugadorDTO CrearJugador(CrearJugadorDTO modelo)
         {
+            if (!IsValid(modelo) || modelo is null) throw new ArgumentException("El modelo no es válido");
+
             if (_repo.ExisteJugador(modelo.Nombre))
                 throw new ArgumentException("El jugador ya existe");
 
@@ -34,6 +39,14 @@ namespace FootballTeamManager.Services
             var jugadorDTO = _mapper.Map<JugadorDTO>(jugador);
 
             return creacionExitosa ? jugadorDTO : null;
+        }
+
+        private bool IsValid(object model)
+        {
+            var validationContext = new ValidationContext(model);
+            var validationResults = new List<ValidationResult>();
+
+            return Validator.TryValidateObject(model, validationContext, validationResults, true);
         }
     }
 }

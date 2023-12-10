@@ -64,9 +64,7 @@ namespace FootballTeamManager.Controllers
         {
             try
             {
-                if (!ModelState.IsValid || crearJugadorDTO is null) return BadRequest(ModelState);
                 var jugador = _jugadorService.CrearJugador(crearJugadorDTO);
-
                 return CreatedAtRoute("GetPlayer", new { playerId = jugador.Id }, jugador);
             }
             catch (ArgumentException ex)

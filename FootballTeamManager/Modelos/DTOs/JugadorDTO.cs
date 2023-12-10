@@ -20,7 +20,6 @@ namespace FootballTeamManager.Modelos.DTOs
         public double PorcentajeAsistencia { get; set; }
         public Posiciones Posicion { get; set; }
         public DateOnly JuegaDesde { get; set; }
-        public DateTime FechaCreacion { get; set; }
 
         [DefaultValue(true)]
         public bool EstaActivo { get; set; }
